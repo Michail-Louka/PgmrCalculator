@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="bgColor">#FF000000</color>
+    <color name="btnOper">#B71375</color>
+    <color name="btntTextOper">#F79540</color>
+    <color name="equal">#FC4F00</color>
+    <color name="mode">#F79540</color>
+    <color name="numText">#FC4F00</color>
+
+</resources>
