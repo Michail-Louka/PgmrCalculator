@@ -88,6 +88,7 @@ class MainActivity : AppCompatActivity() {
                 //if press number after operator
                 newNumExist=true
                 operFlag = true
+                firstNegative = false
                 numArray[1] = number
                 num.text = addNum.append(numArray[1])
             }else if(operFlag){
