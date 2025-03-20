@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         //Operator flags
         var firstOparatorExist = false
-        var operFlag:Boolean = false
+        var operatorExist:Boolean = false
         var newOperExist = false
         //First Number Flag
         var firstNumExist:Boolean = false
@@ -62,6 +62,17 @@ class MainActivity : AppCompatActivity() {
         val numequal = findViewById<Button>(R.id.numEqual)
         val Mode = findViewById<Button>(R.id.Arrow)
         val btnErase = findViewById<ImageButton>(R.id.btnEraser)
+        fun culcClear (){
+            numArray[0] = null
+            numArray[1] = null
+            operatorExist = false
+            newNumExist = false
+            firstNumExist = false
+            firstOparatorExist = false
+            Oper = ""
+            isOdd.text = addNum.clear()
+            num.text = addNum.clear()
+        }
         fun numQueue(number:Double){
             if(!firstNumExist &&!newNumExist) {
                 //if is the first time we press a number
@@ -74,8 +85,7 @@ class MainActivity : AppCompatActivity() {
 
                num.text = addNum.append(numArray[0])
                firstNumExist = true
-               operFlag = true
-            }else if(operFlag && !newNumExist){
+            }else if(!operatorExist && !newNumExist){
                 //if we press a num for the second time before operator,it make it *10
                 if(!firstNegative){
                     numArray[0] =   (numArray[0]!! * 10.0f)+number
@@ -85,20 +95,20 @@ class MainActivity : AppCompatActivity() {
 
                 num.text = addNum.clear()
                 num.text = addNum.append(numArray[0])
-            }else if(!operFlag && !newNumExist) {
+            }else if(operatorExist && !newNumExist) {
                 //if press number after operator
                 newNumExist=true
-                operFlag = true
+                operatorExist = true
                 firstNegative = false
                 numArray[1] = number
                 num.text = addNum.append(numArray[1])
-            }else if(operFlag){
+            }else if(operatorExist){
                 //if we press a num for the second time,it make it *10
                numArray[1] = (numArray[1]!!*10.0f)+number
                num.text = addNum.clear()
                num.text = addNum.append(numArray[0]).append(Oper).append(numArray[1])
             }else{
-                operFlag= false
+                operatorExist= false
                 newNumExist =false
                 firstNumExist = false
             }
@@ -125,58 +135,43 @@ class MainActivity : AppCompatActivity() {
             }else if (Oper=="%"){
                 numArray[0] = (numArray[0]!! /numArray[1]!!)*100
             }
+                //  if number is odd
 
-//  if number is odd
             if ((numArray[0]?.mod(2.0)) ==1.0){
                 isOdd.text = "odd"
             }else if((numArray[0]?.mod(2.0)) ==0.0){
                 isOdd.text = ""
             }
-            operFlag = true
+            operatorExist = false
+                newNumExist =false
             num.text = addNum.clear()
             num.text = addNum.append(numArray[0])
-            }}
+            }
+        }
             fun operatorAction( operator:String){
-                if(operFlag){
-                    if(!firstOparatorExist){
-                        firstOparatorExist=true
-                    }
-                    operFlag = false
+                if(firstNumExist &&!operatorExist){
+                    operatorExist = true
                     newNumExist = false
                     Oper = operator
                     num.text = addNum.append(Oper)
-                }else if(operator=="-") {
+                }else if(!firstNumExist&&operator=="-") {
                     firstNegative = true
                     num.text = "-"
-                }else {
-                    result()
-                    operFlag = true
-                    operatorAction(operator)
                 }
         }
         //clear culculator
-        fun culcClear (){
-            numArray[0] = null
-            numArray[1] = null
-            operFlag = false
-            newNumExist = false
-            firstNumExist = false
-            firstOparatorExist = false
-            Oper = ""
-            isOdd.text = addNum.clear()
-            num.text = addNum.clear()
-        }
+
         fun erase(){
-            if(firstNumExist &&!newNumExist&&operFlag) {
+            if(firstNumExist &&!newNumExist&&!operatorExist) {
                 culcClear()
-            }else if( !operFlag&&!newNumExist){
+            }else if( operatorExist&&!newNumExist){
                 Oper=""
-                operFlag = true
+                operatorExist = false
+
                 num.text = addNum.clear()
                 num.text = addNum.append(numArray[0])
-            }else if( newNumExist) {
+            }else if(newNumExist) {
                 newNumExist=false
-                operFlag = false
                 numArray[1] = null
                 num.text = addNum.clear()
                 num.text = addNum.append(numArray[0]).append(Oper)
