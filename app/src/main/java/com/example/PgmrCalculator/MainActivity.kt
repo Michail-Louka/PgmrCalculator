@@ -1,6 +1,7 @@
 package com.example.PgmrCalculator
 import android.os.Bundle
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -60,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         val numClr = findViewById<Button>(R.id.numClr)
         val numequal = findViewById<Button>(R.id.numEqual)
         val Mode = findViewById<Button>(R.id.Arrow)
-
+        val btnErase = findViewById<ImageButton>(R.id.btnEraser)
         fun numQueue(number:Double){
             if(!firstNumExist &&!newNumExist) {
                 //if is the first time we press a number
@@ -103,6 +104,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
         fun result(){
+            if(numArray[0]!=null&&numArray[1]!=null){
             if (Oper == "+") {
                 numArray[0] = numArray[0]!! + numArray[1]!!
             } else if (Oper == "-") {
@@ -123,6 +125,7 @@ class MainActivity : AppCompatActivity() {
             }else if (Oper=="%"){
                 numArray[0] = (numArray[0]!! /numArray[1]!!)*100
             }
+
 //  if number is odd
             if ((numArray[0]?.mod(2.0)) ==1.0){
                 isOdd.text = "odd"
@@ -132,7 +135,7 @@ class MainActivity : AppCompatActivity() {
             operFlag = true
             num.text = addNum.clear()
             num.text = addNum.append(numArray[0])
-            }
+            }}
             fun operatorAction( operator:String){
                 if(operFlag){
                     if(!firstOparatorExist){
@@ -153,8 +156,8 @@ class MainActivity : AppCompatActivity() {
         }
         //clear culculator
         fun culcClear (){
-            numArray[0] = 0.0
-            numArray[1] = 0.0
+            numArray[0] = null
+            numArray[1] = null
             operFlag = false
             newNumExist = false
             firstNumExist = false
@@ -162,6 +165,22 @@ class MainActivity : AppCompatActivity() {
             Oper = ""
             isOdd.text = addNum.clear()
             num.text = addNum.clear()
+        }
+        fun erase(){
+            if(firstNumExist &&!newNumExist&&operFlag) {
+                culcClear()
+            }else if( !operFlag&&!newNumExist){
+                Oper=""
+                operFlag = true
+                num.text = addNum.clear()
+                num.text = addNum.append(numArray[0])
+            }else if( newNumExist) {
+                newNumExist=false
+                operFlag = false
+                numArray[1] = null
+                num.text = addNum.clear()
+                num.text = addNum.append(numArray[0]).append(Oper)
+            }
         }
         //Numbers
         num0.setOnClickListener {
@@ -196,6 +215,9 @@ class MainActivity : AppCompatActivity() {
         }
         numClr.setOnClickListener{
             culcClear()
+        }
+        btnErase.setOnClickListener(){
+            erase()
         }
         //Actions
         numplus.setOnClickListener(){
@@ -244,6 +266,7 @@ class MainActivity : AppCompatActivity() {
         numequal.setOnClickListener(){
             result()
         }
+
     }
 }
 
