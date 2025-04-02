@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import java.lang.System.exit
 import kotlin.math.pow
 
 class MainActivity : AppCompatActivity() {
@@ -24,7 +25,8 @@ class MainActivity : AppCompatActivity() {
 //      Arrays
         var numArray:Array<Double?> =arrayOfNulls(2)
         var Oper:String =""
-
+        var isDecimal = false
+        var countDecimal =1
         //Operator flags
         var firstOparatorExist = false
         var operatorExist:Boolean = false
@@ -53,11 +55,13 @@ class MainActivity : AppCompatActivity() {
         val num7 = findViewById<Button>(R.id.num7)
         val num8 = findViewById<Button>(R.id.num8)
         val num9 = findViewById<Button>(R.id.num9)
+        val decimal =findViewById<Button>(R.id.decimal)
         //Oparators Buttons
         val numplus = findViewById<Button>(R.id.numPlus)
         val numdiv = findViewById<Button>(R.id.numDiv)
         val nummult = findViewById<Button>(R.id.numMulti)
         val num_ = findViewById<Button>(R.id.num_)
+
         val numClr = findViewById<Button>(R.id.numClr)
         val numequal = findViewById<Button>(R.id.numEqual)
         val Mode = findViewById<Button>(R.id.Arrow)
@@ -69,30 +73,65 @@ class MainActivity : AppCompatActivity() {
             newNumExist = false
             firstNumExist = false
             firstOparatorExist = false
+            isDecimal =false
+            countDecimal = 1
             Oper = ""
             isOdd.text = addNum.clear()
             num.text = addNum.clear()
         }
+        fun power(num:Double,pwr:Int):Double{
+            var number:Double
+            number = num
+            if(pwr ==1){
+                return number
+            }
+            for(i in 1..pwr-1){
+                number = number*num
+            }
+            return number
+        }
+
         fun numQueue(number:Double){
             if(!firstNumExist &&!newNumExist) {
                 //if is the first time we press a number
                num.text = addNum.clear()
-                if(!firstNegative){
-                    numArray[0] = number
-                }else{
-                    numArray[0] = -number
-                }
+              if(isDecimal){
+
+                   if (!firstNegative) {
+                       numArray[0] =  (number/power(10.0,countDecimal))
+                   } else {
+                       numArray[0] =  -(number/power(10.0,countDecimal))
+                   }
+                  countDecimal++
+              }else{
+                  if(!firstNegative){
+                        numArray[0] = number
+                  }else{
+                        numArray[0] = -number
+                  }
+              }
+
+
+
 
                num.text = addNum.append(numArray[0])
                firstNumExist = true
             }else if(!operatorExist && !newNumExist){
                 //if we press a num for the second time before operator,it make it *10
-                if(!firstNegative){
-                    numArray[0] =   (numArray[0]!! * 10.0f)+number
+                if(isDecimal){
+                    if (!firstNegative) {
+                        numArray[0] = numArray[0]!! + (number/(power(10.0,countDecimal)))
+                    } else {
+                        numArray[0] = numArray[0]!! -  (number/(power(10.0,countDecimal)))
+                    }
+                    countDecimal++
                 }else{
-                    numArray[0] =   (numArray[0]!! * 10.0f)-number
+                    if (!firstNegative) {
+                    numArray[0] = (numArray[0]!! * 10.0f) + number
+                    }else {
+                    numArray[0] = (numArray[0]!! * 10.0f) - number
+                    }
                 }
-
                 num.text = addNum.clear()
                 num.text = addNum.append(numArray[0])
             }else if(operatorExist && !newNumExist) {
@@ -100,13 +139,32 @@ class MainActivity : AppCompatActivity() {
                 newNumExist=true
                 operatorExist = true
                 firstNegative = false
-                numArray[1] = number
+                if (isDecimal){
+                    numArray[1] =(number/power(10.0,countDecimal))
+                }else{
+                    numArray[1] = number}
+
+
                 num.text = addNum.append(numArray[1])
             }else if(operatorExist){
-                //if we press a num for the second time,it make it *10
-               numArray[1] = (numArray[1]!!*10.0f)+number
-               num.text = addNum.clear()
-               num.text = addNum.append(numArray[0]).append(Oper).append(numArray[1])
+                    //if we press a num for the second time,it make it *10
+                if(isDecimal){
+                    if (!firstNegative) {
+                        numArray[1] = numArray[1]!! + (number/power(10.0,countDecimal))
+                    } else {
+                        numArray[1] = numArray[1]!! - (number/power(10.0,countDecimal))
+                    }
+                    countDecimal++
+                }else{
+                    if (!firstNegative) {
+                        numArray[1] = (numArray[1]!! * 10.0f) + number
+                    }else {
+                        numArray[1] = (numArray[1]!! * 10.0f) - number
+                    }
+                }
+
+                num.text = addNum.clear()
+                num.text = addNum.append(numArray[0]).append(Oper).append(numArray[1])
             }else{
                 operatorExist= false
                 newNumExist =false
@@ -114,6 +172,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
         fun result(){
+            isDecimal=false
+            countDecimal=1
             if(numArray[0]!=null&&numArray[1]!=null){
             if (Oper == "+") {
                 numArray[0] = numArray[0]!! + numArray[1]!!
@@ -148,16 +208,19 @@ class MainActivity : AppCompatActivity() {
             num.text = addNum.append(numArray[0])
             }
         }
-            fun operatorAction( operator:String){
-                if(firstNumExist &&!operatorExist){
-                    operatorExist = true
-                    newNumExist = false
-                    Oper = operator
-                    num.text = addNum.append(Oper)
-                }else if(!firstNumExist&&operator=="-") {
-                    firstNegative = true
-                    num.text = "-"
-                }
+        fun operatorAction( operator:String){
+            if(firstNumExist &&!operatorExist){
+                operatorExist = true
+                newNumExist = false
+                Oper = operator
+                isDecimal=false
+                countDecimal=1
+
+                num.text = addNum.append(Oper)
+            }else if(!firstNumExist&&operator=="-") {
+                firstNegative = true
+                num.text = "-"
+            }
         }
         //clear culculator
 
@@ -176,7 +239,11 @@ class MainActivity : AppCompatActivity() {
                 num.text = addNum.clear()
                 num.text = addNum.append(numArray[0]).append(Oper)
             }
+            isDecimal=false
+            countDecimal=1
+
         }
+
         //Numbers
         num0.setOnClickListener {
             numQueue(0.0)
@@ -207,6 +274,10 @@ class MainActivity : AppCompatActivity() {
         }
         num9.setOnClickListener{
             numQueue(9.0)
+        }
+
+        decimal.setOnClickListener{
+            isDecimal = true
         }
         numClr.setOnClickListener{
             culcClear()
