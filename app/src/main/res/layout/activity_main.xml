@@ -225,23 +225,35 @@
             >
 
             <Button
+                android:id="@+id/numClr"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="clr"
+                app:cornerRadius="10dp" />
+
+            <Button
                 android:id="@+id/num0"
                 android:text="0"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:layout_margin="5dp"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 app:cornerRadius="10dp"
                 />
+
             <Button
-                android:id="@+id/numClr"
-                android:text="clr"
+                android:id="@+id/decimal"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="70dp"
                 android:layout_margin="5dp"
-                app:cornerRadius="10dp"
-                />
+                android:layout_weight="1"
+                android:backgroundTint="@color/btnOper"
+                android:textColor="@color/btntTextOper"
+                android:text="."
+                android:textSize="20sp"
+                app:cornerRadius="10dp" />
 
             <Button
                 android:id="@+id/numPlus"
@@ -268,21 +280,10 @@
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:layout_margin="5dp"
-                android:layout_weight="2"
+                android:layout_weight="3"
                 android:backgroundTint="@color/equal"
                 android:text="="
                 android:textStyle="bold"
-                app:cornerRadius="10dp" />
-
-            <Button
-                android:id="@+id/decimal"
-                android:layout_width="0dp"
-                android:layout_height="70dp"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:text="."
-                android:textSize="11sp"
-                android:backgroundTint ="@color/btnOper"
                 app:cornerRadius="10dp" />
 
             <Button
